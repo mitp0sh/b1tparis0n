@@ -3,6 +3,7 @@ package de.mitp0sh.b1tparis0n;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,16 +12,79 @@ import java.util.Iterator;
 
 public class EntryPoint
 {
-	public static final String ORIG       = "/Users/bg/Desktop/report_result/1394618762/template_b336e20c4f1242c2b4512321ddb699c157a5f8072b5cf771bf51309e3da1b344.pdf";
-	public static final String MUTA       = "/Users/bg/Desktop/report_result/1394618762/1394619278_0b0cee3a0cc05d7445746451e8cc52920caa446764e9b4c3fedd85b8fd1a7778/tmp_mutant.pdf";
-	public static final String RESULT_DIR = "/Users/bg/Desktop/testpdfs";
+	public static String ORIG       = null;
+	public static String MUTA       = null;
+	public static String RESULT_DIR = null;
 	
 	public static ArrayList<BytePatch> bytePatchList = new ArrayList<BytePatch>();
 	
 	public static void main(String[] args) throws IOException
 	{
+		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println("[b1p] - B1tpARiS0n v1.0 - mitp0sh @ 2014");
+		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println();
+		System.out.flush();
+		
+		if(args.length != 3)
+		{
+			System.out.println("  usage: <b1tparis0n> \"original_file\" \"mutated_file\" \"result_directory\"");
+			System.out.println();
+			System.out.flush();
+			System.err.println("  [-] - missing commandline parameters!");
+			System.err.flush();
+			System.exit(-1);
+		}
+		
+		ORIG       = args[0];
+		MUTA       = args[1];
+		RESULT_DIR = args[2];
+		
 		File origFile = new File(ORIG);
+		try 
+		{
+			if(!origFile.exists() || !origFile.exists())
+			{
+				throw new FileNotFoundException();
+			}
+		}
+		catch(FileNotFoundException e)
+		{
+			System.err.println("  [-] - original file parameter is NOT a file!");
+			System.err.flush();
+			System.exit(-1);
+		}
+		
+		
 		File mutaFile = new File(MUTA);
+		try 
+		{
+			if(!mutaFile.exists() || !mutaFile.exists())
+			{
+				throw new FileNotFoundException();
+			}
+		}
+		catch(FileNotFoundException e1)
+		{
+			System.err.println("  [-] - mutated file parameter is NOT a file!");
+			System.err.flush();
+			System.exit(-1);
+		}
+		
+		File dir = new File(RESULT_DIR);
+		try 
+		{
+			if(!dir.exists() || !dir.isDirectory())
+			{
+				throw new FileNotFoundException();
+			}
+		}
+		catch(FileNotFoundException e1)
+		{
+			System.err.println("  [-] - result directory parameter is NOT a directory!");
+			System.err.flush();
+			System.exit(-1);
+		}
 		
 		String extension = "";
 		int x = ORIG.lastIndexOf('.');
@@ -34,7 +98,8 @@ public class EntryPoint
 		
 		if(origBytes.length != mutaBytes.length)
 		{
-			System.err.println("error - unable to compare files, size not equal!");
+			System.err.println("  [-] - unable to compare files, size not equal!");
+			System.err.flush();
 			System.exit(-1);
 		}
 		
